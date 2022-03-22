@@ -1,0 +1,70 @@
+package test;
+import java.util.Calendar;
+
+public class Persona {
+	private String nombre,apellido;
+	private int dni;
+
+	private java.util.Calendar nacimiento; //fecha nacimiento
+	
+	
+	public Persona(String apellido, String nombre, int dni, Calendar nacimiento) {
+	this.nombre = nombre;
+	this.apellido= apellido;
+	this.dni=dni;
+	this.nacimiento=nacimiento;
+	}
+
+	private int Edad(Calendar nac) {
+		Calendar today = new java.util.GregorianCalendar();
+        today.setTime(new java.util.Date());
+        
+        int yeardiff= today.get(Calendar.YEAR)- nac.get(Calendar.YEAR);
+        int monthdiff= today.get(Calendar.MONTH)- nac.get(Calendar.MONTH);
+        int daydiff= today.get(Calendar.DATE)- nac.get(Calendar.DATE);
+        
+        if (daydiff<0) {
+        	daydiff+=31;
+        	monthdiff--;
+        }
+        if(monthdiff<0) {
+        	monthdiff+=12;
+        	yeardiff--;
+        }
+        return yeardiff;
+	}
+	private String whichday() {
+		Calendar today = new java.util.GregorianCalendar();
+		today.setTime(new java.util.Date());
+		Calendar bday= new java.util.GregorianCalendar(today.get(Calendar.YEAR),nacimiento.get(Calendar.MONTH),nacimiento.get(Calendar.DATE));
+		int wd= bday.get(Calendar.DAY_OF_WEEK);
+		switch(wd) {
+			case 2:
+			return "Lunes";
+
+			case 3:
+			return "Martes";
+
+			case 4:
+			return "Miércoles";
+			
+			case 5:
+			return "Jueves";
+
+			case 6:
+			return "Viernes";
+
+			case 7:
+			return "Sábado";
+			
+			case 1:
+			return "Domingo";
+		}
+		return "Date error";
+	}
+	public void mostrar() {
+		System.out.println(apellido + " "+ nombre +  ": "+ Edad(nacimiento)+ " años. Dia: " + whichday());
+	}
+	
+}
+
