@@ -18,14 +18,16 @@ public class Banco {
 	public void listarComisiones() {
 
 		for(Cuenta oCuenta : myCuenta) {
-			float comision = 0f;
-			float a= oCuenta.cantidadTransacciones();
-			float b= oCuenta.sumatoriaTransacciones();
+			float comision = oCuenta.obtenerComision();
 			
-			comision = 30 - ( (b/ a) * 0.005f );
-			
+			System.out.println(oCuenta.toString() + ", Comision: "+ comision);
 		}
 		
 	}
 
+	public void addCuenta(Cuenta c) {
+		myCuenta.add(c);
+		
+	}
+	
 }

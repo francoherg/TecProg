@@ -9,7 +9,7 @@ public class Extraccion extends Transaccion {
 	}
 	
 	public Float getMontoPesos() {
-		return myMonto.
+		return -1*(myMonto.convertirAPeso());
 	}
     
 }

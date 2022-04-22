@@ -8,7 +8,7 @@ public class Monto {
 
 	public Moneda myMoneda;
 
-	private Float convertirAPeso(Moneda moneda) {
+	public Float convertirAPeso() {
 		return monto_pesos;
 	}
 
