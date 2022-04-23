@@ -1,4 +1,4 @@
-package guia3_ejercicio4;
+package tp3_4;
 
 public class Monto {
 
@@ -8,7 +8,7 @@ public class Monto {
 
 	public Moneda myMoneda;
 
-	public Float convertirAPeso() {
+	public Float getMontoPeso() {
 		return monto_pesos;
 	}
 

@@ -1,3 +1,3 @@
-package guia3_ejercicio4;
+package tp3_4;
 public class Consulta extends Transaccion {
 }

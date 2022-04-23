@@ -1,4 +1,4 @@
-package guia3_ejercicio4;
+package tp3_4;
 public class Deposito extends Transaccion {
 
     public Monto myMonto;
@@ -8,4 +8,7 @@ public class Deposito extends Transaccion {
 		this.myMonto = myMonto;
 	}
 
+	public Float getMontoPesos() {
+		return (myMonto.getMontoPeso());
+	}
 }

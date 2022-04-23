@@ -1,4 +1,4 @@
-package guia3_ejercicio4;
+package tp3_4;
 
 import java.util.Calendar;
 import java.util.Vector;
@@ -16,7 +16,15 @@ public class Cuenta {
 	}
 
 	private int cantidadTransacciones() {
-		return myTransaccion.size()-1;
+		Integer cantidad = 0;
+		
+		for(Transaccion oTransaccion : myTransaccion) {
+		
+				cantidad += 1;
+			
+		}
+		
+		return cantidad;
 	}
 
 	private Float sumatoriaTransacciones() {

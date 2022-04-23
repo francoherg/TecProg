@@ -1,4 +1,4 @@
-package guia3_ejercicio4;
+package tp3_4;
 public class Extraccion extends Transaccion {
 
     public Monto myMonto;
@@ -9,7 +9,7 @@ public class Extraccion extends Transaccion {
 	}
 	
 	public Float getMontoPesos() {
-		return -1*(myMonto.convertirAPeso());
+		return -1*(myMonto.getMontoPeso());
 	}
     
 }
