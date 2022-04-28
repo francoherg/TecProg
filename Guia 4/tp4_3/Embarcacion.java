@@ -1,26 +1,27 @@
-package ejercicio4_3;
-public class Embarcacion {
+package tp4_3;
 
-  private String matricula;
+public abstract class Embarcacion {
 
-  private Float estora;
+	private String matricula;
 
-  private Short año;
+	private Float estora;
 
-  
-  public Embarcacion(String matricula, Float estora, Short año) {
-	super();
-	this.matricula = matricula;
-	this.estora = estora;
-	this.año = año;
-}
+	private Short año;
 
-protected Float moduloNormal() {
-  return null;
-  }
+	public Embarcacion(String matricula, Float estora, Short año) {
+		super();
+		this.matricula = matricula;
+		this.estora = estora;
+		this.año = año;
+	}
 
-  public Float calcularModulo() {
-  return null;
-  }
+	protected abstract Float moduloEspecial();
 
+	protected Float moduloNormal() {
+		return (10 * estora);
+	}
+
+	public float calcularAlquiler(float days) {
+		return (days * moduloNormal());
+	}
 }

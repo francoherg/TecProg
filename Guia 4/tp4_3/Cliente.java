@@ -1,15 +1,15 @@
-package ejercicio4_3;
+package tp4_3;
+
 public class Cliente {
 
-  private String nombre;
+	private String nombre;
 
-  private Integer DNI;
+	private Integer DNI;
 
-public Cliente(String nombre, Integer dNI) {
-	super();
-	this.nombre = nombre;
-	DNI = dNI;
-}
+	public Cliente(String nombre, Integer dNI) {
+		super();
+		this.nombre = nombre;
+		DNI = dNI;
+	}
 
-  
 }

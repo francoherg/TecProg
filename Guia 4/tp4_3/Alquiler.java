@@ -1,4 +1,4 @@
-package ejercicio4_3;
+package tp4_3;
 
 import java.util.Calendar;
 
@@ -30,7 +30,7 @@ final) por un módulo función de cada barco (obtenido simplemente multiplicando
 de eslora) y por un valor fijo*/
 public float CalcularAlquiler() {
 	float days= (fechafin.getTimeInMillis() - fechainicio.getTimeInMillis())/86400000;
-	float alquiler = days*myEmbarcacion.moduloNormal();
+	float alquiler = myEmbarcacion.calcularAlquiler(days);
 	return alquiler;
   }
 
