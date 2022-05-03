@@ -1,0 +1,59 @@
+;comentario
+"hola"
+ 42
+22/7
+3.14
++
+(+ 73 5)
+'(a b c d)
+
+(car '(a b c))
+
+;Vectores
+#(1 2 3)
+
+;String
+"a"
+
+;lista de listas
+(* (- 1 2) 3)
+
+;suma
+(+ 1 2 3 4 5)
+
+;Predicados: finalizan en ?, retornan #t o #f. 
+eq?
+;Procedimientos de string comienzan con "string".
+string-append
+
+;Definir procedimiento
+(define cuadrado
+  (lambda (n)
+    (* n n)))
+
+;Listas (list)
+(quote (1 2 3 4 5))
+'(4.2 "hola")
+;Quote = '
+
+;car y cdr
+'(a b c d)
+(car '(a b c d))
+(cdr '(a b c d))
+(car (cdr '(a b c d)))
+;candidad de a es cantidad de cad, d de cdr
+(cadr '((b c) a))
+(caar '((b c) a))
+
+;cons: construye lista }, recibe dos argumentos. Usualmente el 2do es una lista y devuelve lista
+(cons 'a '())
+(cons 'a '(b c))
+(cons 'a (cons 'b (cons 'c ())))
+
+;lista impropia
+(cons 'a 'b)
+
+(cdr '(a  b))
+(cdr '(a . b))
+
+
