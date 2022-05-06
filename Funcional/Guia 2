@@ -1,0 +1,110 @@
+"aaa"
+(let ((x 1))
+    (let ((x (+ x 1)))
+       (display x)))
+
+(let ((double (lambda (x) (+ x x))))
+  (list (double (* 3 4))
+        (double (/ 99 11))
+        (double (- 2 7))))
+
+;Ejercicio 1
+;a
+(define a 10)
+(define b 5)
+
+(let ((x (* 7 a)) (y (* 3 a)))
+  (+ (/ x b) (/ y b) (/ x b)))
+
+;b
+(define c 3)
+(let ((list1 (list a b c)))
+  (cons (car list1) (cdr list1)))
+
+
+(let ((x 9))
+(* x 
+(let ((x (/ x 3)))
+(+ x x))))
+
+;3a
+(let ((x 'a) (y 'b))
+(list (let ((x2 'c)) (cons x2 y))
+(let ((y 'd)) (cons x y))))
+
+;3b
+
+(let ((x '((a b) c)))
+  (cons (let ((x (cdr x)))
+          (car x))
+        (let ((x (car x)))
+          (cons (let ((x (cdr x)))
+                  (car x))
+                (cons (let ((x (car x)))
+                        x)
+                      (cdr x))))))
+
+(let ((x '((a b) c)))
+(cons (let ((x (cdr x)))
+(car x))
+(let ((x (car x)))
+(cons (let ((x (cdr x)))
+(car x))
+(cons (let ((x (car x)))
+x)
+(cdr x))))))
+
+;Ej 4
+(let ((f (lambda (x) x)))
+  (f 'a))
+
+ (let ((f (lambda x x)))
+(f 'a))
+
+(let ((f (lambda (x . y) x)))
+(f 'a))
+
+(let ((f (lambda (x . y) y)))
+(f 'a))
+
+;Ej 5
+(define convierte_operacion (lambda (ecuacion)
+                              (let ((parametro1 (car ecuacion))
+                                    (operador (car (cdr ecuacion)))
+                                    (parametro (cdr (cdr ecuacion))))
+                                (cons operador (cons parametro1 parametro2)))))
+
+;Ej 6
+(define corto
+  (lambda (a b)
+    (if (and (list? a) (list? b))
+        (if (> (length a) (length b) )
+            b ; do
+            a) ; else
+        ("no es lista") ; else2
+        )))
+;Ej 7
+(define area
+  (lambda (radio)
+    (* radio radio 3.14)))
+;Ej 8
+(define perimetro
+  (lambda (radio)
+    (* 2 3.14 radio)))
+;Ej 9
+(define circlestuff
+   (lambda (radio)
+     (list (area radio) (perimetro radio))))
+
+;Ej 10
+(define cuadrado
+  (lambda (a)
+    (* a a)))
+(define distance2d
+  (lambda (a b)
+     (sqrt (+ (cuadrado (- (car b) (car a))) (cuadrado (- (cdr b) (cdr a)))))))
+
+(define proximo
+  (lambda (a lista)
+    (let car 
+    (if (< (- (abs (car a)) (abs (car ( 
