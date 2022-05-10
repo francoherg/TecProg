@@ -1,0 +1,118 @@
+;Ej 1
+(define factorial
+  (lambda (x)
+    (if (= 0 x)
+        1
+        (* x (factorial(- x 1))))))
+
+;(factorial 3)
+
+;Ej 3  
+(define count-elem
+  (lambda (x ls)
+    (if (null? ls)
+        0
+        (if (= x (car ls))
+            (+ 1 (count-elem x (cdr ls)))
+            (count-elem x (cdr ls))))))
+
+; (count-elem 3 '(1 2 3 4 5 4 3 2 1 ))
+
+;Ej 4 (2)
+(define subst
+  (lambda (x y ls)
+    (if (null? ls)
+        ls
+    (if (eqv? x (car ls))
+        (cons y (subst x y (cdr ls)))
+        (cons (car ls) (subst x y (cdr ls)))))))
+
+;(subst 'c 'k '( c o c o n u t))
+
+;Ej 5 (3)
+(define del-elem
+  (lambda (x ls)
+    (if (null? ls)
+        ls
+        (if (= x (car ls))
+            (del-elem x (cdr ls))
+            (cons (car ls) (del-elem x (cdr ls)))))))
+
+(define agrupar
+  (lambda ls
+    (if (null? ls)
+        '()
+        (uf (eqv? x (car ls))
+            (delete-elem x (cdr ls))
+            (cins (car ls) (delete-elem x (cdr ls)))))))
+        
+    ;(cons (vector->list (make-vector (count-elem (car ls))))))))
+     ;   (
+
+;(agrupar '(A A B C A B A D C)) --> ((AAAA) (BB) (CC) (D))
+
+(define concatenar
+  (lambda (l1 l2)
+    (if (null? l1)
+        l2
+        (cons (car l1) (concatenar (cdr l1) l2)))))
+
+(concatenar '(AAAA) '(BB))
+
+;Ej 6
+(define primer-num
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (if (number? (car ls))
+            (car ls)
+            (primer-num (cdr ls))))))
+(primer-num '((1 . 2) 'a (b) (5) 6 8 'a 9))
+
+;Ej 7
+(define attach-at-end
+  (lambda (x ls)
+    (concatenar ls (list x))))
+(attach-at-end 'prueba '(esto es una))
+
+;Ej 8
+(define abs-ls
+  (lambda (ls)
+    (if (null? ls)
+        ls
+        (cons (abs(car ls)) (abs-ls (cdr ls))))))
+(define char->text-ls
+  (lambda (ls)
+    (if (null? ls)
+        ls
+        (cons (char->text(car ls)) (char->text-ls (cdr ls))))))
+(define VF->num
+  (lambda (x)
+    (if (eqv? x "V")
+    1
+    0)))
+(define VF->num-ls
+  (lambda (ls)
+    (if (null? ls)
+        ls
+        (cons (VF->num(car ls)) (VF->num-ls (cdr ls))))))
+(define conv­-num
+  (lambda (ls)
+    (if (eqv? (car ls) "D")
+    (abs-ls (cdr ls))
+    (if (eqv? (car ls) "T")
+    (char->text-ls (cdr ls))
+    (if (eqv? (car ls) "B")
+    (VF->num-ls (cdr ls)))))))
+
+    
+(define conv­datos
+  (lambda (ls)
+    (if (null? ls)
+        ls
+        (cons (conv­-num(car ls)) (conv­datos (cdr ls))))))
+    (conv­datos '(
+("D" (1 2 ­3 4 ­5))
+("T" ("6" "7" "8"))
+("B" ("V" "F"))
+))
