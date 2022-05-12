@@ -12,7 +12,7 @@
   (lambda (x ls)
     (if (null? ls)
         0
-        (if (= x (car ls))
+        (if (eqv? x (car ls))
             (+ 1 (count-elem x (cdr ls)))
             (count-elem x (cdr ls))))))
 
@@ -34,22 +34,10 @@
   (lambda (x ls)
     (if (null? ls)
         ls
-        (if (= x (car ls))
+        (if (eqv? x (car ls))
             (del-elem x (cdr ls))
             (cons (car ls) (del-elem x (cdr ls)))))))
 
-(define agrupar
-  (lambda ls
-    (if (null? ls)
-        '()
-        (uf (eqv? x (car ls))
-            (delete-elem x (cdr ls))
-            (cins (car ls) (delete-elem x (cdr ls)))))))
-        
-    ;(cons (vector->list (make-vector (count-elem (car ls))))))))
-     ;   (
-
-;(agrupar '(A A B C A B A D C)) --> ((AAAA) (BB) (CC) (D))
 
 (define concatenar
   (lambda (l1 l2)
@@ -59,6 +47,13 @@
 
 (concatenar '(AAAA) '(BB))
 
+(define agrupar
+  (lambda ls
+    (if (null? (car ls))
+        ()
+        (cons (vector->list(make-vector (count-elem (caar ls) (car ls)) (caar ls))) (agrupar(del-elem (caar ls) (car ls)))))))
+ (agrupar '(A A B C A B A D C))
+        
 ;Ej 6
 (define primer-num
   (lambda (ls)
@@ -81,11 +76,11 @@
     (if (null? ls)
         ls
         (cons (abs(car ls)) (abs-ls (cdr ls))))))
-(define char->text-ls
+(define string->number-ls
   (lambda (ls)
     (if (null? ls)
         ls
-        (cons (char->text(car ls)) (char->text-ls (cdr ls))))))
+        (cons (string->number(car ls)) (string->number-ls (cdr ls))))))
 (define VF->num
   (lambda (x)
     (if (eqv? x "V")
@@ -99,11 +94,11 @@
 (define conv­-num
   (lambda (ls)
     (if (eqv? (car ls) "D")
-    (abs-ls (cdr ls))
-    (if (eqv? (car ls) "T")
-    (char->text-ls (cdr ls))
-    (if (eqv? (car ls) "B")
-    (VF->num-ls (cdr ls)))))))
+        (abs-ls (cadr ls))
+        (if (eqv? (car ls) "T")
+            (string->number-ls (cadr ls))
+            (if (eqv? (car ls) "B")
+                (VF->num-ls (cadr ls)))))))
 
     
 (define conv­datos
@@ -112,7 +107,24 @@
         ls
         (cons (conv­-num(car ls)) (conv­datos (cdr ls))))))
     (conv­datos '(
-("D" (1 2 ­3 4 ­5))
+("D" (1 2 3 4 5))
 ("T" ("6" "7" "8"))
 ("B" ("V" "F"))
 ))
+
+;Ej 11
+(define cuadrado
+  (lambda (a)
+    (* a a)))
+(define distance2d
+  (lambda (a b)
+    (if (or (null? a) (null? b))
+        0
+        (sqrt (+ (cuadrado (- (car b) (car a))) (cuadrado (- (cdr b) (cdr a))))))))
+
+(define distance-pair
+  (lambda (ls)
+    (if (null? (cdr ls))
+        ()
+        (cons (distance2d (car ls) (cadr ls)) (distance-pair (cdr ls))))))
+(distance-pair '((1 . 1) (1 . 2) (2 . 2) (2 . 1) (1 . 1)))
