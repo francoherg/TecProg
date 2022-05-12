@@ -1,4 +1,3 @@
-"aaa"
 (let ((x 1))
     (let ((x (+ x 1)))
        (display x)))
@@ -92,4 +91,23 @@
     (* a a)))
 (define distance2d
   (lambda (a b)
-     (sqrt (+ (cuadrado (- (car b) (car a))) (cuadrado (- (cdr b) (cdr a)))))))
+    (if (or (null? a) (null? b))
+        0
+        (sqrt (+ (cuadrado (- (car b) (car a))) (cuadrado (- (cdr b) (cdr a))))))))
+;Ej 11
+(define distance2d-ls
+  (lambda (p ls)
+    (if (null? ls)
+        ls
+        (cons (distance2d p (car ls)) (distance2d-ls p (cdr ls))))))
+(define menor
+  (lambda (ls)
+    (if (null? (cdr ls))
+        (car ls)
+        (if (< (car ls) (car (cdr ls)))
+            (menor (cons (car ls) (cdr (cdr ls))))
+            (menor (cdr ls))))))
+(define proximo
+  (lambda (p ls)
+    (menor (distance2d-ls p ls))))
+             
