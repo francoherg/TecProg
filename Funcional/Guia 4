@@ -1,0 +1,46 @@
+(define-struct punto (x y))
+(define point-distance
+  (lambda (p1 p2)
+    (sqrt (+ (expt (- (punto-x p1) (punto-x p2)) 2) (expt (- (punto-y p1) (punto-y p2)) 2)))))
+;(point-distance (make-punto 1 1) (make-punto 1 2))
+;Ej 2
+(define sumatoria
+  (lambda (ls)
+    (if (null? ls)
+    '(0 0)
+    (let ((e (car ls)))
+      (map + (list (punto-x e) (punto-y e)) (sumatoria (cdr ls)))))))
+
+(define p1 (make-punto 1 1))
+(define p2 (make-punto 1 2))
+(define p3 (make-punto 2 2))
+
+(define count
+  (lambda (ls)
+    (if (null? ls)
+        0
+        (+ 1 (count (cdr ls))))))
+(define gravedad
+  (lambda (ls)
+    (let ((n (count ls)))
+      (let ((s (sumatoria ls)))
+          (make-punto (/ (car s) n) (/ (cadr s) n))))))
+;Ej 3
+(define distance-p-to-all
+  (lambda (p ls)
+        (if (null? (cdr ls))
+        ()
+        (cons (point-distance p (car ls)) (distance-p-to-all p (cdr ls))))))
+
+(define distance-p-to-all2
+  (lambda (ls)
+    (let ((p (car ls)))
+        (if (null? (cdr ls))
+        ()
+        (append (map (lambda (arg) (point-distance p arg)) (cdr ls)))))))
+
+(define max-distance
+  (lambda (ls)
+    (if (null? (cddr ls))
+        ls
+        (cons (point-distance (car ls) (cadr ls)) (cdr ls)))))
