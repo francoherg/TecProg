@@ -4,16 +4,12 @@
     (sqrt (+ (expt (- (punto-x p1) (punto-x p2)) 2) (expt (- (punto-y p1) (punto-y p2)) 2)))))
 ;(point-distance (make-punto 1 1) (make-punto 1 2))
 ;Ej 2
-(define sumatoria
+(define sumatoria-punto
   (lambda (ls)
     (if (null? ls)
     '(0 0)
     (let ((e (car ls)))
-      (map + (list (punto-x e) (punto-y e)) (sumatoria (cdr ls)))))))
-
-(define p1 (make-punto 1 1))
-(define p2 (make-punto 1 2))
-(define p3 (make-punto 2 2))
+      (map + (list (punto-x e) (punto-y e)) (sumatoria-punto (cdr ls)))))))
 
 (define count
   (lambda (ls)
@@ -23,7 +19,7 @@
 (define gravedad
   (lambda (ls)
     (let ((n (count ls)))
-      (let ((s (sumatoria ls)))
+      (let ((s (sumatoria-punto ls)))
           (make-punto (/ (car s) n) (/ (cadr s) n))))))
 ;Ej 3
 (define distance-p-to-all
@@ -39,8 +35,142 @@
         ()
         (append (map (lambda (arg) (point-distance p arg)) (cdr ls)))))))
 
+(define mayor
+  (lambda (ls)
+    (if (null? (cdr ls))
+        (car ls)
+        (if (> (car ls) (car (cdr ls)))
+            (mayor (cons (car ls) (cdr (cdr ls))))
+            (mayor (cdr ls))))))
+
+(define distance-ls
+  (lambda (ls)
+    (if (null? (cdr ls))
+        ()
+        (append (distance-p-to-all2 ls) (distance-p-to-all2 (cdr ls))))))
+
 (define max-distance
   (lambda (ls)
-    (if (null? (cddr ls))
+    (mayor (distance-ls ls))))
+;(max-distance (list (make-punto 0 0) (make-punto 3 3) (make-punto 2 3) (make-punto 6 0) (make-punto 0 6)))
+
+;Cosas 
+(define read-until-word
+  (lambda (puerto)
+    (if (or (char=? (peek-char puerto) #\newline) (char=? (peek-char puerto) #\space) (char=? (peek-char puerto) #\return))
+        (cons (read-char puerto) (read-until-word puerto))
+        null)))
+(define read-word-of-chars
+  (lambda (puerto)
+    (cond
+      [(eof-object? (peek-char puerto)) 
+       null]
+      [(or (char=? (peek-char puerto) #\newline) (char=? (peek-char puerto) #\space) (char=? (peek-char puerto) #\return))
+       (read-until-word puerto) 
+       null]
+      [else 
+       (cons (read-char puerto) (read-word-of-chars puerto))])))
+(define in (open-input-file "Peso palabra.txt"))
+
+(define char-ls->integer
+  (lambda (ls)
+      (sumatoria (map (lambda (x) (char->integer x)) ls))))
+
+;(char-ls->integer (read-word-of-chars in))
+
+
+
+
+;Ej 4
+(close-input-port in)
+(define in (open-input-file "Peso palabra.txt"))
+
+(define concatenar
+  (lambda (l1 l2)
+    (if (null? l1)
+        l2
+        (cons (car l1) (concatenar (cdr l1) l2)))))
+
+
+(define file->list
+  (lambda (puerto)
+    (let ((x (read puerto)))
+      (if (eof-object? x)
+          ()
+          (concatenar (list x) (file->list puerto))))))
+
+(define count-words
+  (lambda (puerto)
+    (count (file->list puerto))))
+
+(define file->char-ls
+  (lambda (puerto)
+        (if (eof-object? (peek-char puerto))
+            null
+            (cons (read-char puerto) (file->char-ls puerto)))))
+
+  ;(file->char-ls in)
+(define count-chars
+  (lambda (puerto)
+    (count (file->char-ls puerto))))
+
+
+;Ej 5
+(define file->string
+  (lambda (puerto)
+    (letrec ((file->char-ls (lambda (p)
+        (cond
+      [(eof-object? (peek-char puerto)) 
+       null]
+      [(char=? (peek-char puerto) #\return)
+       (read-char puerto) 
+       null]
+      [else 
+       (cons (read-char puerto) (file->char-ls p))]))))
+    (if (eof-object? (peek-char puerto)) 
+       "" 
+       (string-append (list->string (file->char-ls puerto)) (file->string puerto))))))
+(close-input-port in)
+(define in (open-input-file "Peso palabra.txt"))
+
+;(file->string in)
+
+;Ej 6
+(define sumatoria
+  (lambda (ls)
+    (if (null? ls)
+    0
+    (let ((e (car ls)))
+      (+ e (sumatoria (cdr ls)))))))
+(define pesopalabra
+  (lambda (palabra)
+    (sumatoria (map (lambda (x) (char->integer x)) (string->list palabra)))))
+
+;(pesopalabra "casa")
+(define menor-peso
+  (lambda (ls)
+    (let ((elem1 (car ls)))
+                    (if (= (length ls) 1)
+                        elem1
+                        (let ((elem2 (menor-peso(cdr ls))))
+                          (if (< (pesopalabra elem2) (pesopalabra elem1))
+                              elem2
+                              elem1
+                              ))))))
+
+(define del-elem
+  (lambda (x ls)
+    (if (null? ls)
         ls
-        (cons (point-distance (car ls) (cadr ls)) (cdr ls)))))
+        (if (eqv? x (car ls))
+            (del-elem x (cdr ls))
+            (cons (car ls) (del-elem x (cdr ls)))))))
+(define ordenar
+  (lambda (ls)
+    (if (null? (cdr ls))
+        ls
+        (let ((m (menor-peso ls)))
+          (cons m (ordenar (del-elem m ls)))))))
+ (ordenar '("moto" "auto" "casa" "juego" "aire"))
+
+
