@@ -1,3 +1,4 @@
+;Ej 1
 (define-struct punto (x y))
 (define point-distance
   (lambda (p1 p2)
@@ -70,7 +71,7 @@
        null]
       [else 
        (cons (read-char puerto) (read-word-of-chars puerto))])))
-(define in (open-input-file "Peso palabra.txt"))
+;(define in (open-input-file "Peso palabra.txt"))
 
 (define char-ls->integer
   (lambda (ls)
@@ -82,8 +83,8 @@
 
 
 ;Ej 4
-(close-input-port in)
-(define in (open-input-file "Peso palabra.txt"))
+;(close-input-port in)
+
 
 (define concatenar
   (lambda (l1 l2)
@@ -109,7 +110,9 @@
             null
             (cons (read-char puerto) (file->char-ls puerto)))))
 
-  ;(file->char-ls in)
+(define in (open-input-file "Peso palabra.txt"))
+
+(file->char-ls in)
 (define count-chars
   (lambda (puerto)
     (count (file->char-ls puerto))))
@@ -130,8 +133,8 @@
     (if (eof-object? (peek-char puerto)) 
        "" 
        (string-append (list->string (file->char-ls puerto)) (file->string puerto))))))
-(close-input-port in)
-(define in (open-input-file "Peso palabra.txt"))
+;(close-input-port in)
+;(define in (open-input-file "Peso palabra.txt"))
 
 ;(file->string in)
 
@@ -142,6 +145,7 @@
     0
     (let ((e (car ls)))
       (+ e (sumatoria (cdr ls)))))))
+
 (define pesopalabra
   (lambda (palabra)
     (sumatoria (map (lambda (x) (char->integer x)) (string->list palabra)))))
@@ -150,10 +154,20 @@
 (define menor-peso
   (lambda (ls)
     (let ((elem1 (car ls)))
-                    (if (= (length ls) 1)
+                    (if (= (count ls) 1)
                         elem1
                         (let ((elem2 (menor-peso(cdr ls))))
                           (if (< (pesopalabra elem2) (pesopalabra elem1))
+                              elem2
+                              elem1
+                              ))))))
+(define menor
+  (lambda (ls)
+    (let ((elem1 (car ls)))
+                    (if (= (count ls) 1)
+                        elem1
+                        (let ((elem2 (menor(cdr ls))))
+                          (if (<  elem2  elem1)
                               elem2
                               elem1
                               ))))))
@@ -169,8 +183,66 @@
   (lambda (ls)
     (if (null? (cdr ls))
         ls
-        (let ((m (menor-peso ls)))
+        (let ((m (menor ls)))
           (cons m (ordenar (del-elem m ls)))))))
- (ordenar '("moto" "auto" "casa" "juego" "aire"))
 
+(define ordenarporpeso
+  (lambda (ls)
+    (if (null? (cdr ls))
+        ls
+        (let ((m (menor-peso ls)))
+          (cons m (ordenarporpeso (del-elem m ls)))))))
+ (ordenarporpeso '("moto" "auto" "casa" "juego" "aire"))
 
+ 
+;Ej 7
+(define reverse-aux
+  (lambda (ls aux)
+    (if (list? ls)
+          (if (null? ls)
+              aux
+              (reverse-aux (cdr ls) (cons (car ls) aux)))
+          ls
+          )))
+
+(define reverse-ls
+  (lambda (ls)
+    (reverse-aux ls ())))
+
+(define reverse-inside
+  (lambda (ls)
+    (if (list? ls)
+        (map (lambda (x) (reverse-ls (reverse-inside x))) ls)
+        ls
+        )))
+
+(reverse-ls '((a b) c d))
+(reverse-inside '((a b) c d))
+
+(define fullreverse-list
+  (lambda (ls)
+    (if (null? (cdr ls))
+        ()
+        (if (list? ls)
+           (reverse-ls (reverse-inside ls))
+           ls
+          ))))
+        (fullreverse-list '((a (e f) (e f) (e f) b) c d))
+
+(define app2list
+  (lambda (a b)
+    (cond
+      [(and (list? a) (list? b))
+       (concatenar a b)]
+      [(list? a)
+       (cons b a)]
+      [(list? b)
+       (cons a b)]
+      [else
+       (list a b)])))
+#|
+(app2list '(a a) '(b b))
+(app2list 'a '(b b))
+(app2list '(a a) 'b)
+(app2list 'a 'b)
+|#
