@@ -215,18 +215,11 @@
         (map (lambda (x) (reverse-ls (reverse-inside x))) ls)
         ls
         )))
-
-(reverse-ls '((a b) c d))
-(reverse-inside '((a b) c d))
-
+        
 (define fullreverse-list
   (lambda (ls)
-    (if (null? (cdr ls))
-        ()
-        (if (list? ls)
-           (reverse-ls (reverse-inside ls))
-           ls
-          ))))
+    (reverse-ls (reverse-inside ls))
+    ))
         (fullreverse-list '((a (e f) (e f) (e f) b) c d))
 
 (define app2list
