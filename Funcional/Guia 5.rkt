@@ -2,15 +2,10 @@
 ;Ej 1
 (define reverse-ls
   (lambda (ls)
-    (letrec ((reverse-aux
-  (lambda (ls2 aux)
-    (if (list? ls2)
-          (if (null? ls2)
-              aux
-              (reverse-aux (cdr ls2) (cons (car ls2) aux)))
-          ls
-          ))))
-    (reverse-aux ls ()))))
+    (if (null? ls)
+    '()
+    (concatenar (reverse-ls (cdr ls)) (list (car ls))))))
+
 (define concatenar
   (lambda (l1 l2)
     (if (null? l1)
@@ -38,11 +33,13 @@
 ;Ej 3
 (define cant-izq
   (lambda (x ls)
-    (if (null? ls)
-        0
-        (if (eqv? x (car ls))
+    (if (belongs x ls)
+        (if (null? ls)
             0
-            (+ 1 (cant-izq x (cdr ls)))))))
+            (if (eqv? x (car ls))
+                0
+                (+ 1 (cant-izq x (cdr ls)))))
+        (display "el elemento no pertenece a la lista"))))
 ;(cant-izq 'd '(a b c d e f))
 
 ;Ej 4
@@ -157,4 +154,7 @@
             (suma-listas ls (cdr ls2))
             (suma-listas (concatenar ls (list (car ls2))) (cdr ls2))))))
 ;(suma-listas '(1 2 3 4) '(2 3 5))
-        
+
+(define get-altura
+  (lambda (ls)
+    (+ 2 (get-profundidad ls))))
