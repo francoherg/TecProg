@@ -63,10 +63,11 @@
       [else
        #t]
       )))
+#|
 (fechap 12 12 1986)
 (fechap 12 30 1987)
 (fechap 31 2 1986)
-(fechap 31 11 1876)
+(fechap 31 11 1876)|#
 ;Ej 6
 (define mayor
   (lambda (ls)
@@ -100,13 +101,10 @@
 
 (define aplanar
   (lambda (ls)
-    (letrec ((aplanar-aux
-              (lambda (lsa)
-                (if (list? lsa)
-        (map (lambda (x) (unpack  (aplanar x))) lsa)
-        lsa))))
-      (unpack (aplanar-aux ls)))))
-;(aplanar '(((a (c d))) (b) e))
+    (if (list? ls)
+        (unpack (map (lambda (x) (unpack  (aplanar x))) ls))
+        ls)))
+(aplanar '(((a (c (f) d))) (b) e))
 ;Ej 8
 (define get-last
   (lambda (ls)
