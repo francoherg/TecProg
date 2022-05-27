@@ -1,0 +1,102 @@
+(define count-elem
+  (lambda (x ls)
+    (if (null? ls)
+        0
+        (if (eqv? x (car ls))
+            (+ 1 (count-elem x (cdr ls)))
+            (count-elem x (cdr ls))))))
+(define concatenar
+  (lambda (l1 l2)
+    (if (null? l1)
+        l2
+        (cons (car l1) (concatenar (cdr l1) l2)))))
+(define del-elem
+  (lambda (x ls)
+    (if (null? ls)
+        ls
+        (if (eqv? x (car ls))
+            (del-elem x (cdr ls))
+            (cons (car ls) (del-elem x (cdr ls)))))))
+
+(define sinrepetidos
+  (lambda (ls)
+    (if (null? ls)
+        ls
+    (if (> (count-elem (car ls) ls) 1)
+        (cons (car ls) (sinrepetidos (del-elem (car ls) (cdr ls))))
+        (cons (car ls) (sinrepetidos (cdr ls)))))))
+(sinrepetidos '(a b c d a s d))
+(define paises
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (concatenar (concatenar (list (caar (car ls))) (list (caar (cdr (car ls))))) (paises (cdr ls))))))
+(paises '(
+( (Argentina . 5) (Brasil . 0 ) )
+( (Argentina . 3) (Bolivia . 2) )
+( (Argentina . 2) (Chile . 1) )
+( (Bolivia . 1) (Paraguay . 0) )
+( (Brasil . 1) (Venezuela . 0) )
+( (Colombia . 0) (Ecuador . 2) )
+( (Brasil . 2) (Ecuador . 1) )
+))
+
+(define cantidadpartidos
+  (lambda (ls)
+    ;(map (lambda (x) (cons x (count-elem x (paises ls)))) (sinrepetidos(paises ls)))))
+    (if (null? ls)
+        ()
+        (map (lambda (x) (cons x (count-elem x (paises ls)))) (sinrepetidos(paises ls))))))
+
+#|
+(cantidadpartidos '(
+( (Argentina . 5) (Brasil . 0 ) )
+( (Argentina . 3) (Bolivia . 2) )
+( (Argentina . 2) (Chile . 1) )
+( (Bolivia . 1) (Paraguay . 0) )
+( (Brasil . 1) (Venezuela . 0) )
+( (Colombia . 0) (Ecuador . 2) )
+( (Brasil . 2) (Ecuador . 1) )
+))
+|#
+
+(define riesgo
+  (lambda (dist)
+    (cond
+      [(< dist 1)
+       (* 0.1 dist)]
+      [(and (>= dist 1) (< dist 3))
+       (* 0.3 dist)]
+      [else
+       (* 0.5 dist)]
+      )))
+(define cuadrado
+  (lambda (a)
+    (* a a)))
+(define distance
+  (lambda (a b)
+    (if (or (null? a) (null? b))
+        0
+        (sqrt (+ (cuadrado (- (car b) (car a))) (cuadrado (- (cadr b) (cadr a))) (cuadrado (- (caddr b) (caddr a))))))))
+(define menor-riesgo-aux
+  (lambda (ls)
+    (let ((elem1 (car ls)))
+                    (if (= (length ls) 1)
+                        elem1
+                        (let ((elem2 (menor-riesgo-aux(cdr ls))))
+                          (if (<  (cdr elem2)  (cdr elem1))
+                              elem2
+                              elem1
+                              ))))))
+(define riesgo-ls
+  (lambda (origen ls)
+    (if (null? ls)
+        ()
+        (concatenar (list (riesgo (distance origen (car ls)))) (riesgo-ls origen (cdr ls))))))
+
+(riesgo-ls '(0 0 0) '((1 1 500) (2 4 1500) (5 7 7500)))
+(define menorriesgo
+  (lambda (origen ls)
+    (car (menor-riesgo-aux (map cons ls (riesgo-ls origen ls))))))
+(menorriesgo '(0 0 0) '((1 1 500) (2 4 1500) (5 7 7500)))
+
