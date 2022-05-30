@@ -156,3 +156,23 @@
 (define get-altura
   (lambda (ls)
     (+ 2 (get-profundidad ls))))
+
+;getprofundidad sin map
+(define getprof
+  (lambda (elem)
+    (if (list? elem)
+        (if (not (null? elem))
+            (+ 1 (getprof (car elem)))
+            1)
+        0
+        )))
+
+(getprof '((() (2)) (((5 7))) 4))
+(define getprof2
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (cons (getprof (car ls)) (getprof2 (cdr ls))))))
+(define getprof3
+  (lambda (ls)
+    (mayor (getprof2 ls))))
