@@ -134,3 +134,25 @@
               (let ((aux1 (factura-aux 1  lsaux)) (aux2 (factura-aux 2 lsaux)) (aux3 (factura-aux 3  lsaux)))
             (cons aux1 (cons aux2 (cons aux3 (list (cons "total" (+ (car aux1) (car aux2) (car aux3)))))))))))))
 (factura '((0 0 0 1 1 0 2 0 1 0) (0 1 1 3 0 0 1 1 1 1) (1 1 1 3 3 1 1 1 0 2) (1 1 2 2 0 0 1 1 1 0)))
+
+(define div-a-mul-b
+  (lambda (a b)
+    (if (eqv? a 1)
+        (cons (cons a b) '())
+        (cons (cons a b) (div-a-mul-b (floor (/ a 2)) (* b 2))))))
+
+(div-a-mul-b 27 82)
+
+(define sumandos-aux
+  (lambda (ls)
+    (if (null? ls)
+        0
+        (if (odd? (caar ls))
+            (+ (cdar ls) (sumandos-aux (cdr ls)))
+            (+ 0 (sumandos-aux (cdr ls)))))))
+
+(define sumandos
+  (lambda (a b)
+    (let ((ls (div-a-mul-b a b)))
+      (sumandos-aux ls))))
+(sumandos 27 82)
