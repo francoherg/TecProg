@@ -104,6 +104,15 @@
     (if (list? ls)
         (unpack (map (lambda (x) (unpack  (aplanar x))) ls))
         ls)))
+;mejor aplanar
+(define aplanar
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (if (list? (car ls))
+            (concatenar (aplanar (car ls)) (aplanar (cdr ls)))
+            (concatenar (list (car ls)) (aplanar (cdr ls)))))))
+            
 (aplanar '(((a (c (f) d))) (b) e))
 ;Ej 8
 (define get-last
