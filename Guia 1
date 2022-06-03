@@ -1,0 +1,44 @@
+f(a, 2).
+f(a, 3).
+f(b, 2).
+f(b, 4).
+f(c, 1).
+f(c, 2).
+
+padre(leoncio, alberto).
+padre(leoncio, geronimo).
+padre(alberto, luis).
+padre(alberto, juan).
+padre(geronimo, luisa).
+
+nieto(X, Y):- padre(Z, X), padre(Y, Z).
+
+hermano(A, B):- padre(Z, A), padre(Z, B), B\=A.
+%hermano(luis, X).
+%Ejercicio 3
+menu("Bombones de jamon", "Locro", "Dulce de Batata").
+menu("Bombones de jamon", "Locro", "Alfajor norteño").
+menu("Tarta de atun", "Atados de repollo", "Dulce de batata").
+menu("Tarta de atun", "Pollo romano con hierbas y vino", "Flan").
+menu("Volovanes de atun", "Matambre con espinacas y parmesano", "Torta moka").
+%menu(X, "locro",Z).
+%Ejercicio 5
+entrada("omelete").
+entrada("empanada").
+principal("locro").
+principal("guiso").
+postre("flan").
+postre("helado").
+
+carta(Entrada,Principal,Postre):- entrada(Entrada), principal(Principal), not(postre(Postre)).
+%Ejercicio 6
+
+estrella(sol).
+orbita(sol,tierra).
+orbita(tierra,luna).
+orbita(marte, deimos).
+orbita(marte, phobos).
+
+planeta(X):- orbita(X, z).
+luna(X):- orbita(z, X).
+lunaDe(X,Y):- planeta(X), orbita(X,Y).
