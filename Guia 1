@@ -5,15 +5,15 @@ f(b, 4).
 f(c, 1).
 f(c, 2).
 
-padre(leoncio, alberto).
-padre(leoncio, geronimo).
-padre(alberto, luis).
-padre(alberto, juan).
-padre(geronimo, luisa).
+%padre(leoncio, alberto).
+%padre(leoncio, geronimo).
+%padre(alberto, luis).
+%padre(alberto, juan).
+%padre(geronimo, luisa).
 
-nieto(X, Y):- padre(Z, X), padre(Y, Z).
+%nieto(X, Y):- padre(Z, X), padre(Y, Z).
 
-hermano(A, B):- padre(Z, A), padre(Z, B), B\=A.
+%hermano(A, B):- padre(Z, A), padre(Z, B), B\=A.
 %hermano(luis, X).
 %Ejercicio 3
 menu("Bombones de jamon", "Locro", "Dulce de Batata").
@@ -22,7 +22,56 @@ menu("Tarta de atun", "Atados de repollo", "Dulce de batata").
 menu("Tarta de atun", "Pollo romano con hierbas y vino", "Flan").
 menu("Volovanes de atun", "Matambre con espinacas y parmesano", "Torta moka").
 %menu(X, "locro",Z).
+
 %Ejercicio 5
+ruta(santafe, parana).
+ruta(parana, corrientes).
+ruta(santafe, cordoba).
+ruta(santafe, coronda).
+ruta(santafe, rosario).
+ruta(rosario, capital).
+ruta(rosario, mardelplata).
+ruta(capital, cordoba).
+
+%a) ruta(X, cordoba).
+%b) ruta(parana, X).
+%c) ruta(parana, cordoba). (false)
+combruta(X,Y):- ruta(X,Z), ruta(Z,Y).
+
+%d)	combruta(santafe,corrientes). (true)
+%Ejercicio 6
+
+estrella(sol).
+orbita(sol,mercurio).
+orbita(sol,venus).
+orbita(sol,tierra).
+orbita(sol,marte).
+orbita(sol,jupiter).
+orbita(sol,saturno).
+orbita(sol,urano).
+orbita(sol,neptuno).
+orbita(sol,pluton).
+
+orbita(tierra,luna).
+
+orbita(marte,deimos).
+orbita(marte,phobos).
+
+orbita(pluton,charon).
+orbita(pluton,nix).
+orbita(pluton,hydra).
+
+planeta(X):- orbita(sol, X).
+%planeta(tierra). (true)
+luna(X):- orbita(Z, X), planeta(Z).
+%luna(luna). true
+lunaDe(X,Y):- planeta(X), orbita(X,Y).
+%lunaDe(tierra,luna). true
+
+%cantidadLunas(P,Cant):- lunaDe(P,L).
+%impedimiento: no se contar :(
+
+%Ejercicio 7
 entrada("omelete").
 entrada("empanada").
 principal("locro").
@@ -30,15 +79,52 @@ principal("guiso").
 postre("flan").
 postre("helado").
 
-carta(Entrada,Principal,Postre):- entrada(Entrada), principal(Principal), not(postre(Postre)).
-%Ejercicio 6
+carta(Entrada,Principal,Postre):- entrada(Entrada), principal(Principal), postre(Postre).
+%carta(X,Y,Z).
+%Ejercicio 8
 
-estrella(sol).
-orbita(sol,tierra).
-orbita(tierra,luna).
-orbita(marte, deimos).
-orbita(marte, phobos).
 
-planeta(X):- orbita(X, z).
-luna(X):- orbita(z, X).
-lunaDe(X,Y):- planeta(X), orbita(X,Y).
+hombre("nae").
+hombre("colo").
+hombre("waldo").
+mujer("brisa").
+progenitor("nae","waldo").
+progenitor("nae","sofi").
+progenitor("brisa","waldo").
+progenitor("brisa","sofi").
+progenitor("colo","nae").
+
+padre(Padre,Hijo):- hombre(Padre), progenitor(Padre , Hijo).
+madre(Madre,Hijo):- mujer(Madre), progenitor(Madre , Hijo).
+
+abuelo(Abuelo,Nieto):- padre(Abuelo, Z), progenitor(Z,Nieto).
+abuela(Abuela,Nieto):- madre(Abuela, Z), progenitor(Z,Nieto).
+hermano(A, B):- progenitor(Z, A), progenitor(Z, B), B\=A.
+hermanovaron(Persona,Hermano):- hombre(Hermano), hermano(Persona,Hermano).
+hermanomujer(Persona,Hermana):- mujer(Hermana), hermano(Persona,Hermana).
+
+sucesor(Persona,Sucesor):- progenitor(Persona,Sucesor).
+sucesor(Persona,Sucesor):- progenitor(Z,Sucesor),sucesor(Persona,Z).
+
+%Ejercicio 9
+trabaja("Haydee","abogado").
+trabaja("Haydee","ingeniero").
+trabaja("Livio","contador").
+trabaja("Tania","medico").
+trabaja("Pedro","abogado").
+genero("Rayuela","novela larga").
+genero("Karamazov","novela larga").
+genero("Octaedro","novela").
+genero("Inventario","libro de poemas").
+genero("Leones", "novela").
+trabajogusta("abogado","novela larga").
+trabajogusta("medico","novela").
+trabajogusta("ingeniero","novela").
+trabajogusta("contador","libro de cuentos").
+trabajogusta("contador","libro de poemas").
+trabajadorgusta(P,L):- trabaja(P,T),trabajogusta(T,G), genero(L,G).
+personagusta("Livio", "Rayuela").
+gusta(P,L):- trabajadorgusta(P,L); personagusta(P,L).
+%a gusta("Livio",X).
+%b gusta(X,"Leones").
+%c genero(X,"novela").
