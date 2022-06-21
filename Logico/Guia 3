@@ -1,0 +1,161 @@
+%Dado el siguiente programa en Prolog que calcula el factorial de un número:
+factorial(0, 1):-!.
+factorial(Numero, Factorial) :- Numero > 0,
+NumeroAnt is Numero - 1,
+factorial(NumeroAnt, FactorialAnt),
+Factorial is Numero * FactorialAnt.
+%El resultado de evaluar “factorial(5, X).” es:
+%X = 120;
+%false.
+%Utilice un operador de corte donde corresponda para que el programa finalice una vez terminada la
+%recursión y no retorne el “false” final.
+
+
+%Dado el siguiente programa en Prolog:
+p(1).
+p(2):-!.
+p(3).
+%Evaluar las siguientes consultas, dejando registrado para cada una el resultado obtenido, y en lenguaje
+%natural, por que se obtiene dicho resultado detallando los puntos de elección que han sido desechados
+%y cual es el operador de corte por el cual han sido quitados.
+%a. p(X).X = 1 X = 2: no llega a la regla 3, por que ya llego al cut
+%b. p(X), p(Y).X = 1,Y = 2 X = 2,Y = 1 X = Y, Y = 2: lo mismo, ya se cumplio la regla dos que tiene corte, por lo que no llega a la 3
+%c. p(X), !, p(Y).X = Y, Y = 1, X = 1, Y = 2: 
+
+
+%Implementar un predicado “eliminar_primero/3” que quite de una lista la primera aparición de un
+%determinado elemento, utilizar el operador de corte donde considere necesario para garantizar que no
+%se realicen unificaciones innecesarias.
+%Ejemplo:
+%eliminar_primero([1, 2, 3, 1, 2, 3], 2, X).
+%X = [1, 3, 1, 2, 3].
+%eliminar_primero([1, 2, 3, 1, 2, 3], a, X).
+%X = [1, 2, 3, 1, 2, 3].
+
+eliminar_primero([],_,[]).
+eliminar_primero([X|RestoX],N,[X|Result]):- X\=N, eliminar_primero(RestoX,N,Result),!.
+eliminar_primero([X|Result],N,Result):- X=N. 
+
+%Implementar un predicado “agregar_nuevo/3” que agregue a una lista un elemento, solo si la misma no
+%lo contiene. Utilizar corte para no proceder en caso de detectar que el elemento ya existe.
+%Ejemplo:
+%agregar_nuevo(a, [1, 2, 3], X).
+%X = [1, 2, 3, a].
+%agregar_nuevo(1, [1, 2, 3], X).
+%X = [1, 2, 3]
+
+concatenar([],L,L).
+concatenar([X|L1],L2,[X|L3]):- concatenar(L1,L2,L3).
+
+miembro(X,[X|_]).
+miembro(X,[_|R]):- miembro(X,R).
+
+
+agregar_nuevo(N, Result, Result):- miembro(N, Result),!.
+agregar_nuevo(N, [X|RestX], [X|Result]):- RestX\=[],agregar_nuevo(N,RestX,Result),!.
+agregar_nuevo(N, [X|_], Result):-  concatenar([X],[N],Result).
+
+%Dadas dos palabras, representadas como listas de caracteres, 
+%evaluar la semejanza entre las mismas.
+%Para esto se verificarán, por posición, las letras de las dos palabras, 
+%cada coincidencia sumará un punto
+%y cada vez que las letras no coincidan se restará un punto.
+%Ejemplos:
+%semejanza([h,o,l,a], [h,o,l,o], S). --> S = 2.
+%semejanza([m,e,s,a], [m,e,s,a,d,a], S). --> S = 2.
+%semejanza([s,o,l,a], [m,o,n,a], S). --> S = 0.
+%semejanza([s,o,l], [c,a,s,a], S). --> S = -4
+
+semejanza([], [], 0):- !.
+semejanza([_|RestX], [], Result):- semejanza(RestX, [], R2), Result is R2-1,!.
+semejanza([],[_|RestX], Result):- semejanza(RestX, [], R2), Result is R2-1,!.
+semejanza([X|RestX], [Y|RestY], Result):- X=Y, semejanza(RestX, RestY, R2), Result is R2+1,!.
+semejanza([X|RestX], [Y|RestY], Result):- X\=Y, semejanza(RestX, RestY, R2), Result is R2-1,!.
+
+/*
+%Dado un diccionario en forma de lista de palabras, 
+%se quiere buscar una palabra cualquiera, para lo cual
+%se deberá chequear que la misma pertenezca al diccionario. 
+%Si existe se debe devolver una lista de un
+%elemento con la palabra buscada, si no existe, 
+%se debe devolver una lista con las alternativas a la
+%palabra buscada y su valoración de semejanza.
+%Las alternativas devueltas en caso de no existir la palabra en el diccionario, 
+serán tomadas del mismo en
+virtud de la semejanza con la palabra buscada. 
+Se tomarán como semejantes aquellas palabras cuyo
+valor de semejanza sea mayor a cero.
+Para el desarrollo de ésta segunda parte del programa, 
+se puede usar el predicado predefinido
+“atom_chars(C, L)” que toma un átomo (C) y 
+lo transforma en una lista de literales (L):
+atom_chars(hola, L). --> L = [h, o, l, a].
+
+La definición del diccionario en principio es:
+dic([sanar, hola, sabana, sabalo, prueba, computadora, cartera, mate, termo, mesa, silla, sarna]).
+Ejemplos:
+buscar(hola, L). --> L = [hola]
+buscar(holo, L). --> L = [[hola, 2]]
+buscar(saban, L). --> L = [[sanar, 1], [sabana, 4], [sabalo, 2]]
+*/
+dic([sanar, hola, sabana, sabalo, prueba, computadora, cartera, mate, termo, mesa, silla, sarna]).
+
+dicls([X],[Result]):- atom_chars(X,Result),!.
+dicls([X|Rest],[Xchar|Result]):- atom_chars(X,Xchar), dicls(Rest ,Result),!.
+
+buscar(X,Resultado):- 
+
+    buscar_aux(X,[sanar, hola, sabana, sabalo, prueba, computadora, cartera, mate, termo, mesa, silla, sarna],Resultado).
+buscar_aux(X,[Y|_],Y):- atom_chars(X,Xchar),atom_chars(Y,Ychar), Xchar==Ychar.
+buscar_aux(X,[Y|Dic],[Z|Result]):- atom_chars(X,Xchar),atom_chars(Y,Ychar), Xchar\=Ychar, semejanza(Xchar,Ychar,Sem), Sem > 0, concatenar([Y],[Sem],Z), buscar_aux(X,Dic,Result),!. 
+buscar_aux(X,[Y|Dic],Result):- atom_chars(X,Xchar),atom_chars(Y,Ychar), Xchar\=Ychar, semejanza(Xchar,Ychar,Sem), Sem =< 0, buscar_aux(X,Dic,Result),!. 
+buscar_aux(_,[],[]).
+
+
+/*Escriba un predicado en prolog de aridad 6 que implemente 
+ * la función reemplazar, la cual recibirá los
+siguientes parámetros:
+a. el elemento a reemplazar en la primer lista
+b. el elemento de reemplazo
+c. a partir de que instancia encontrada comienza a reemplazar, 
+debe validarse que su valor sea >=
+1
+d. cuantos reemplazos como máximo se harán, siendo -1 el valor para indicar que reemplace todas
+las instancias que encuentre. Debe validarse que su valor sea X= -1 o X >=1
+e. una lista de elementos en donde se reemplazará
+f. el último parámetro debe unificar con la lista resultante
+Nota: Se debe implementar la funcionalidad, no se puede usar un predicado predefinido que la
+implemente.
+Ejemplos:
+reemplazar(1, a, 0, -1, [1, 1, 2, 2, 3, 3, 2, 2, 1, 1], L).
+El valor de inicio debe ser mayor o igual a 1
+Fail.*/
+
+reemplazar(_,_,_,_,[],[]).
+
+reemplazar(_,_,Inicio,_,_,_):- Inicio<1, fail.
+reemplazar(_,_,_,Hasta,_,_):- Hasta=0, fail.
+reemplazar(_,_,_,Hasta,_,_):- Hasta=<1, fail.
+reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,[X|Resto],[Reemplazo|Resultado]):- 
+    Reemplazar = X, Inicio = 1, Hasta >= 1, Hasta2 is Hasta -1,reemplazar(Reemplazar,Reemplazo,Inicio,Hasta2,Resto,Resultado).
+
+reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,[X|Resto],[Reemplazo|Resultado]):- 
+    Reemplazar = X, Inicio = 1, Hasta = -1,reemplazar(Reemplazar,Reemplazo,Inicio,Hasta, Resto,Resultado).
+
+reemplazar(Reemplazar,Reemplazo,Inicio,_,[X|Resto],[Reemplazo|Resultado]):- 
+    Reemplazar = X, Inicio >= 2, Inicio2 is Inicio -1,reemplazar(Reemplazar,Reemplazo,Inicio2 ,_,Resto,Resultado).
+reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,[X|Resto],[X|Resultado]):- 
+    Reemplazar \= X, reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,Resto,Resultado).
+    
+
+
+
+
+
+
+
+
+
+
+
+
