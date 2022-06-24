@@ -3,7 +3,7 @@ factorial(0, 1):-!.
 factorial(Numero, Factorial) :- Numero > 0,
 NumeroAnt is Numero - 1,
 factorial(NumeroAnt, FactorialAnt),
-Factorial is Numero * FactorialAnt.
+Factorial is Numero * FactorialAnt,!.
 %El resultado de evaluar “factorial(5, X).” es:
 %X = 120;
 %false.
@@ -131,27 +131,37 @@ reemplazar(1, a, 0, -1, [1, 1, 2, 2, 3, 3, 2, 2, 1, 1], L).
 El valor de inicio debe ser mayor o igual a 1
 Fail.*/
 
+
 reemplazar(_,_,_,_,[],[]).
-
 reemplazar(_,_,Inicio,_,_,_):- Inicio<1, fail.
-reemplazar(_,_,_,Hasta,_,_):- Hasta=0, fail.
+reemplazar(_,_,_,Hasta,_,_):- Hasta==0, fail.
 reemplazar(_,_,_,Hasta,_,_):- Hasta=<1, fail.
-reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,[X|Resto],[Reemplazo|Resultado]):- 
-    Reemplazar = X, Inicio = 1, Hasta >= 1, Hasta2 is Hasta -1,reemplazar(Reemplazar,Reemplazo,Inicio,Hasta2,Resto,Resultado).
 
 reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,[X|Resto],[Reemplazo|Resultado]):- 
-    Reemplazar = X, Inicio = 1, Hasta = -1,reemplazar(Reemplazar,Reemplazo,Inicio,Hasta, Resto,Resultado).
+    Reemplazar = X, Inicio = 1, Hasta >= 1, Hasta2 is Hasta -1,reemplazar(Reemplazar,Reemplazo,Inicio,Hasta2,Resto,Resultado),!.
 
-reemplazar(Reemplazar,Reemplazo,Inicio,_,[X|Resto],[Reemplazo|Resultado]):- 
-    Reemplazar = X, Inicio >= 2, Inicio2 is Inicio -1,reemplazar(Reemplazar,Reemplazo,Inicio2 ,_,Resto,Resultado).
+reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,[X|Resto],[Reemplazo|Resultado]):- 
+    Reemplazar = X, Inicio = 1, Hasta = -1,reemplazar(Reemplazar,Reemplazo,Inicio,Hasta, Resto,Resultado), !.
+
+reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,[X|Resto],[Reemplazar|Resultado]):- 
+    Reemplazar == X, Inicio >= 2, Inicio2 is Inicio - 1,reemplazar(Reemplazar,Reemplazo,Inicio2 ,Hasta,Resto,Resultado),!.
 reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,[X|Resto],[X|Resultado]):- 
-    Reemplazar \= X, reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,Resto,Resultado).
+    Reemplazar \= X, reemplazar(Reemplazar,Reemplazo,Inicio,Hasta,Resto,Resultado), !.
     
+/*8. Cree un programa que encuentre la salida dado el plano de una casa, para lo cual:
+a. Debe resolver cómo modelar el plano.
+b. Debe encontrar la forma de avanzar en el camino hacia la salida.
+c. Debe verificar que no se formen bucles en el camino.
+Ejemplo:
+salir(a, Camino).
+Camino = [a, b, c, g, Salida];
+Camino = [a, b, e, f, g, Salida];
+Camino = [a, d, f, g, Salida];
+Camino = [a, d, f, e, b, c, g, Salida].
+*/
 
 
-
-
-
+%[[a,[b,d]] ,[b,[a,c]], [d,[a,f]], [f,[d,g]], [e,[f]], [c,[b,g]] , [g,[s,f]]]
 
 
 
