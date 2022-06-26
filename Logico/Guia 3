@@ -161,7 +161,40 @@ Camino = [a, d, f, e, b, c, g, Salida].
 */
 
 
-%[[a,[b,d]] ,[b,[a,c]], [d,[a,f]], [f,[d,g]], [e,[f]], [c,[b,g]] , [g,[s,f]]]
+
+concatenar([],L,L).
+concatenar([X|L1],L2,[X|L3]):- concatenar(L1,L2,L3).
+miembro(X,[X|_]).
+miembro(X,[_|R]):- miembro(X,R).
+
+conectado(a,b).
+conectado(a,d).
+conectado(b,c).
+conectado(c,g).
+conectado(d,f).
+conectado(e,f).
+conectado(g,f).
+conectado(g,s).
+conectados(X,Y):- conectado(X,Y).
+conectados(X,Y):- conectado(Y,X).
+
+/*
+camino(X,Y,[],[X|[Y]]):- conectados(X,Y).
+
+camino(X,Y,Recorrido,Camino):- conectados(X,Y),miembro(X,Recorrido),concatenar(Recorrido,[Y],Camino).
+
+camino(X,Y,Recorrido,Camino):- camino(X,Z,Recorrido,Camino1),  conectados(Z,Y),not(miembro(Y,Camino1)),concatenar(Camino1,[Y],Camino).
+
+recorrido(X,Y,Camino):- camino(X,Y,[],Camino).
+salir(X, Camino):- recorrido(X,s,Camino).
+*/
+
+camino(X,[X|R],[X|R]):- !.
+
+camino(X,[Y|R],Camino) :- conectados(Y,Z), not(miembro(Z,[Y|R])), camino(X,[Z,Y|R],Camino).
+
+salir(Entrada,Camino) :- camino(Entrada,[s],Camino).
+
 
 
 
