@@ -1,0 +1,79 @@
+/*1. Escriba un programa en prolog que determine si una casilla del tablero de ajedrez se
+encuentra amenazada. En caso de estarlo, indicar quien la amenaza y desde que posición.
+Las piezas a tener en cuenta serán:
+● reina: mueve en diagonal y en linea recta
+● alfil: mueve siempre en diagonal
+● torre: mueve siempre en linea recta
+La forma de indicar la posición de las piezas rivales será:
+"pieza"(F, C).
+En donde:
+● "pieza" es una de las piezas descriptas arriba.
+● F es la fila en donde se encuentra la pieza
+● C es la columna en donde se encuentra la pieza
+Ejemplo:
+reina(2, 3).
+alfil(6, 3).
+torre(8, 5).
+amenaza(4, 5, R).
+R = reina(2, 3).
+R = alfil(6, 3).
+R = torre(8, 5).
+*/
+concatenar([],L,L).
+concatenar([X|L1],L2,[X|L3]):- concatenar(L1,L2,L3).
+
+reina(2, 3).
+alfil(6, 3).
+torre(8, 5).
+
+amenazaTorreY(Y,torre(Z,Y)):- torre(Z,Y). 
+amenazaTorreX(X,torre(X,Z)):- torre(X,Z). 
+amenazaTorre(9,_,[]):- !,fail.
+amenazaTorre(_,9,[]):- !,fail.
+amenazaTorre(_,0,[]):- !,fail.
+amenazaTorre(0,_,[]):- !,fail.
+amenazaTorre(X,Y,R):- amenazaTorreX(X,R) ; amenazaTorreY(Y,R).
+
+
+amenazaAlfilNorEste(X,Y,alfil(Z,W)):-  alfil(Z,W), Z is X+1, W is Y+1,!.
+amenazaAlfilNorEste(X,Y,alfil(Z,W)):-  X<9 ,X>0 , Y >0 , Y < 9, amenazaAlfilNorEste(X+1,Y+1,alfil(Z,W)).
+
+amenazaAlfilNorOeste(X,Y,alfil(Z,W)):-  alfil(Z,W), Z is X-1, W is Y+1,!.
+amenazaAlfilNorOeste(X,Y,alfil(Z,W)):-  X<9 ,X>0 , Y >0 , Y < 9, amenazaAlfilNorOeste(X-1,Y+1,alfil(Z,W)).
+
+amenazaAlfilSurOeste(X,Y,alfil(Z,W)):-  alfil(Z,W), Z is X-1, W is Y-1,!.
+amenazaAlfilSurOeste(X,Y,alfil(Z,W)):-  X<9 ,X>0 , Y >0 , Y < 9, amenazaAlfilSurOeste(X-1,Y-1,alfil(Z,W)).
+
+amenazaAlfilSurEste(X,Y,alfil(Z,W)):-  alfil(Z,W), Z is X+1, W is Y-1,!.
+amenazaAlfilSurEste(X,Y,alfil(Z,W)):-  X<9 ,X>0 , Y >0 , Y < 9, amenazaAlfilSurEste(X+1,Y-1,alfil(Z,W)).
+
+amenazaAlfil(X,Y,R):-  amenazaAlfilNorEste(X,Y,R) ;amenazaAlfilNorOeste(X,Y,R)  ; amenazaAlfilSurOeste(X,Y,R) ; amenazaAlfilSurEste(X,Y,R). 
+
+
+amenazaReinaNorEste(X,Y,reina(Z,W)):-  reina(Z,W), Z is X+1, W is Y+1,!.
+amenazaReinaNorEste(X,Y,reina(Z,W)):-  X<9 ,X>0 , Y >0 , Y < 9, amenazaReinaNorEste(X+1,Y+1,reina(Z,W)).
+
+amenazaReinaNorOeste(X,Y,reina(Z,W)):-  reina(Z,W), Z is X-1, W is Y+1,!.
+amenazaReinaNorOeste(X,Y,reina(Z,W)):-  X<9 ,X>0 , Y >0 , Y < 9, amenazaReinaNorOeste(X-1,Y+1,reina(Z,W)).
+
+amenazaReinaSurOeste(X,Y,reina(Z,W)):-  reina(Z,W), Z is X-1, W is Y-1,!.
+amenazaReinaSurOeste(X,Y,reina(Z,W)):-  X<9 ,X>0 , Y >0 , Y < 9, amenazaReinaSurOeste(X-1,Y-1,reina(Z,W)).
+
+amenazaReinaSurEste(X,Y,reina(Z,W)):-  reina(Z,W), Z is X+1, W is Y-1,!.
+amenazaReinaSurEste(X,Y,reina(Z,W)):-  X<9 ,X>0 , Y >0 , Y < 9, amenazaReinaSurEste(X+1,Y-1,reina(Z,W)).
+amenazaReinaY(Y,reina(Z,Y)):- Y >0 , Y < 9,reina(Z,Y). 
+amenazaReinaX(X,reina(X,Z)):- X<9 ,X>0,reina(X,Z). 
+amenazaReinaXY(X,Y,R):- amenazaReinaX(X,R) ; amenazaReinaY(Y,R).
+amenazaReinaCruz(X,Y,R):-  amenazaReinaNorEste(X,Y,R) ;amenazaReinaNorOeste(X,Y,R)  ; amenazaReinaSurOeste(X,Y,R) ; amenazaReinaSurEste(X,Y,R). 
+
+amenazaReina(X,Y,R):- amenazaReinaXY(X,Y,R) ; amenazaReinaCruz(X,Y,R).
+
+amenaza(X,Y,R):- amenazaReina(X,Y,R) ; amenazaAlfil(X,Y,R) ; amenazaTorre(X,Y,R).
+
+
+
+   
+    
+    
+    
+    
