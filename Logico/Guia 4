@@ -71,6 +71,51 @@ amenazaReina(X,Y,R):- amenazaReinaXY(X,Y,R) ; amenazaReinaCruz(X,Y,R).
 amenaza(X,Y,R):- amenazaReina(X,Y,R) ; amenazaAlfil(X,Y,R) ; amenazaTorre(X,Y,R).
 
 
+/* Se desea programar un sistema de recomendación de películas para Netflix. Cuando un
+usuario inicia la aplicación, el sistema debe recomendarle una lista de películas, según lo
+que éste haya visto previamente. 
+
+Para eso, consulta en toda la base de conocimientos la listas de películas 
+de los usuarios de Netflix y organiza la recomendación en función de
+los que hayan visto las mismas películas que el usuario en cuestión, basado en un nivel de
+similaridad.
+
+Por ejemplo, si tenemos 3 usuarios en Netflix, y en la base de conocimientos tenemos que
+las películas que vio el usuario José fueron 'Misterio a Bordo', 'The Perfection', 'Otro día
+para matar','Barreras','Yo soy Sam','Inspection'; las que vio el usuario María fueron 'Quizás
+para siempre','A pesar de todo','La casa del Lago','Barreras'; y las que vio el usuario Pedro
+son 'Barreras', 'Otro día para matar', 'Yo soy Sam','A pesar de todo'; 
+si Pedro inicia su
+sesión, el sistema debe recomendar películas en función de su lista de películas vistas y
+de la lista de otro usuario con cuya similitud de películas vistas sea mayor a 2. En esta
+caso, se debería obtener la/s película/s que Pedro no vio: 'A pesar de todo'.
+Se solicita, en base a este ejemplo, crear la recomendación de la/s película/s para el
+usuario Pedro.
+*/
+miembro(X,[X|_]).
+miembro(X,[_|R]):- miembro(X,R).
+
+eliminar(_,[],[]).
+eliminar(X,[Y|Resto],L):- X = Y, eliminar(X,Resto,L),!.
+eliminar(X,[Y|Resto],[Y|L]):- X\= Y, eliminar(X,Resto,L),!.
+
+eliminar_repetidos(_,[],[]).
+eliminar_repetidos([],_,[]).
+eliminar_repetidos([X|RestoX],Lista,Res):- miembro(X,Lista), eliminar(X, Lista,ListaSinX), eliminar_repetidos(RestoX,ListaSinX,Res),!.
+eliminar_repetidos([X|RestoX],Lista,[X|Res]):- eliminar_repetidos(RestoX,Lista,Res),!.
+
+vistas(jose,['Misterio a Bordo', 'The Perfection', 'Otro día para matar','Barreras','Yo soy Sam','Inspection']).
+vistas(maria,['Quizás para siempre','A pesar de todo','La casa del Lago','Barreras']).
+vistas(pedro,['Barreras', 'Otro día para matar', 'Yo soy Sam','A pesar de todo']).
+
+similitud([],_,0).
+similitud([X|R],Lista,Resultado):- miembro(X,Lista), similitud(R,Lista,Res2), Resultado is Res2 +1,!.
+similitud([_|R],Lista,Resultado):- similitud(R,Lista,Resultado),!.
+
+similitudVistas(X,Y,R):- vistas(X,Z), vistas(Y,W), similitud(Z,W,R),!.
+
+recomendaciones(X,R):- similitudVistas(X,Z,Similitud), Similitud>2, vistas(X,VistasX), vistas(Z,VistasZ), eliminar_repetidos(VistasZ,VistasX,R).
+
 
    
     
