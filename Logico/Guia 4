@@ -117,6 +117,57 @@ similitudVistas(X,Y,R):- vistas(X,Z), vistas(Y,W), similitud(Z,W,R),!.
 recomendaciones(X,R):- similitudVistas(X,Z,Similitud), Similitud>2, vistas(X,VistasX), vistas(Z,VistasZ), eliminar_repetidos(VistasZ,VistasX,R).
 
 
+/*
+ * 3. Implemente en prolog los predicados que se describen a continuación teniendo en cuenta
+las siguientes consideraciones:
+● No se deben usar predicados predefinidos
+● Se estará trabajando con conjuntos
+● Los mismos se representarán como listas de elementos
+● Los conjuntos no pueden tener elementos repetidos, condición que hay que validar
+en los conjuntos de entradas y asegurar en el de salida
+a. union(C1, C1, U)
+El predicado union/3 ejecuta la unión entre los conjuntos C1 y C2 y devuelve el
+resultado en el conjunto U.
+union([1, 2, 3], [3, 4, 5], U).
+U = [1, 2, 3, 4, 5].
+b. interseccion(C1, C1, U)
+El predicado interseccion/3 ejecuta la intersección entre los conjuntos C1 y C2, y
+devuelve el resultado en el conjunto U.
+interseccion([1, 2, 3], [3, 4, 5], U).
+U = [3].
+c. diferencia(C1, C1, U)
+El predicado diferencia/3 ejecuta la operación diferencia de conjuntos entre los
+conjuntos C1 y C2, y devuelve el resultado en el conjunto U.
+diferencia([1, 2, 3], [3, 4, 5], U).
+U = [1, 2].
+MPORTANTE: No utilizar predicados predefinidos y verificar que los conjuntos de entrada
+sean válidos, es decir que no contengan elementos repetidos, en caso de ser inválidos
+alguno de los dos, el predicado debe fallar.
+*/
+concatenar([],L,L).
+concatenar([X|L1],L2,[X|L3]):- concatenar(L1,L2,L3).
+
+tieneRepetidos([]):- !,fail.
+tieneRepetidos([X|R]):- (   miembro(X,R) ,!); tieneRepetidos(R).
+
+union(X,Y,_):- (   tieneRepetidos(X) ; tieneRepetidos(Y)), !,fail.
+union(_,[],[]).
+union(X,[Y|R],Res):- miembro(Y,X), union(X,R,ResAux),concatenar(X,ResAux,Res),!.
+union(X,[Y|R],[Y|Res]):- not(miembro(Y,X)),union(X,R,Res).
+
+interseccion(X,Y,_):- (   tieneRepetidos(X) ; tieneRepetidos(Y)), !,fail.
+interseccion([],_,[]).
+interseccion([X|R],Lista,[X|Res]):- miembro(X,Lista), interseccion(R,Lista,Res),!.
+interseccion([_|R],Lista,Res):- interseccion(R,Lista,Res),!.
+
+diferencia(X,Y,_):- (   tieneRepetidos(X) ; tieneRepetidos(Y)), !,fail.
+diferencia([],_,[]).
+diferencia([X|RestoX],Lista,Res):- miembro(X,Lista), eliminar(X, Lista,ListaSinX), diferencia(RestoX,ListaSinX,Res),!.
+diferencia([X|RestoX],Lista,[X|Res]):- diferencia(RestoX,Lista,Res),!.
+
+
+
+
    
     
     
