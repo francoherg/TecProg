@@ -19,8 +19,6 @@ R = reina(2, 3).
 R = alfil(6, 3).
 R = torre(8, 5).
 */
-concatenar([],L,L).
-concatenar([X|L1],L2,[X|L3]):- concatenar(L1,L2,L3).
 
 reina(2, 3).
 alfil(6, 3).
@@ -71,7 +69,7 @@ amenazaReina(X,Y,R):- amenazaReinaXY(X,Y,R) ; amenazaReinaCruz(X,Y,R).
 amenaza(X,Y,R):- amenazaReina(X,Y,R) ; amenazaAlfil(X,Y,R) ; amenazaTorre(X,Y,R).
 
 
-/* Se desea programar un sistema de recomendación de películas para Netflix. Cuando un
+/* 2 Se desea programar un sistema de recomendación de películas para Netflix. Cuando un
 usuario inicia la aplicación, el sistema debe recomendarle una lista de películas, según lo
 que éste haya visto previamente. 
 
@@ -115,7 +113,6 @@ similitud([_|R],Lista,Resultado):- similitud(R,Lista,Resultado),!.
 similitudVistas(X,Y,R):- vistas(X,Z), vistas(Y,W), similitud(Z,W,R),!.
 
 recomendaciones(X,R):- similitudVistas(X,Z,Similitud), Similitud>2, vistas(X,VistasX), vistas(Z,VistasZ), eliminar_repetidos(VistasZ,VistasX,R).
-
 
 /*
  * 3. Implemente en prolog los predicados que se describen a continuación teniendo en cuenta
@@ -168,7 +165,82 @@ diferencia([X|RestoX],Lista,[X|Res]):- diferencia(RestoX,Lista,Res),!.
 
 
 
-   
+
+/*
+Extra examen
+Implemente un predicado sopa, que determine si una palabra puede encontrarse en la matriz de letras ingresada.Los movimientos
+permitidos para encontrar la palabra son en horizontal(de izquierda a derecha),y en vertical (de arriba a abajo).Se ingresará la palabra a
+buscar,cómo una lista de caracteres(no es indispensable que valide que sean caracteres),y la matriz de la sopa de letras se ingresará
+cómo una lista de listas,dónde cada sub lista son las letras de una fila (todas las filas tendrán la misma longitud siempre).
+Ejemplo1
+S=[[q,h,o,l,a],
+  [u,o,r,w,q],
+  [k,l,q,a,z],
+  [z,a,y,w,e],
+  [z.x,c,v,b]],sopa([h,o,l,a],S).
+true(se encuentra en la fila1);
+true(se encuentra en la columna2);
+fail(no hay ninguna otra aparición de"hola")
+Ayuda:Comience haciendo la búsqueda para filas,y compruebe su funcionamiento.Luego,plantee la búsqueda para columnas. Para
+simplificar la resolución puede plantear un predicado que obtenga una fila de la sopa y lo devuelva cómo una lista,y un predicado que
+obtenga una columna de la sopa y lo devuelva cómo una lista.
+Nota:No puede usar predicados predefinidos! O_Ó
+*/
+
+
+perteneceaux([],_).
+perteneceaux(_,[]):- !,fail.
+perteneceaux([X|[X2|_]],[Y|[Y2|_]]):- Y=X,Y2\=X2, !,fail.
+perteneceaux([X|RX],[Y|RY]):- Y=X,  perteneceaux(RX,RY),!.
+perteneceaux([X|RX],[Y|RY]):- Y\=X, perteneceaux([X|RX],RY),!.
+
+pertenece(X,[Y|RY]):- (perteneceaux(X,[Y|RY]),!) ; pertenece(X,RY).
+
+inversa([],[]).
+inversa([X|L1],L):- inversa(L1,Resto), concatenar(Resto,[X],L).
+
+
+sopafila(_,[]):- !,fail.
+sopafila(X,[Fila|Rsopa]):- (pertenece(X,Fila) ; (inversa(X,Xinv), pertenece(Xinv,Fila))) ; sopafila(X,Rsopa).
+
+primerelem([X|_],X).
+columna([],[]).
+columna([X|R],[Xp|Col]):- primerelem(X,Xp), columna(R,Col).
+
+resto([_|R],R).
+restoListas([],[]).
+restoListas([X|R],[Xres|Res]):- resto(X,Xres), restoListas(R,Res).
+
+vacio([]).
+transpuesta([],[]).
+transpuesta(X,[]):- primerelem(X,X1), vacio(X1),!.
+transpuesta(L,[Col|Res]):- columna(L,Col), restoListas(L,Lres), transpuesta(Lres,Res),!.
+
+sopacolumna(_,[]):- !,fail.
+sopacolumna(X,L):- transpuesta(L,Ltran), sopafila(X,Ltran).
+
+sopa(X,L):- sopafila(X,L) ; sopacolumna(X,L).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
     
